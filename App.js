@@ -13,8 +13,8 @@ const HomeStack = createStackNavigator({
    initialRouteName: 'Nearby',
    defaultNavigationOptions : ({navigation}) => {
      return {
-       headerLeft: (<Icon name='menu' color='white' onPress={() => navigation.toggleDrawer()} />),
-       headerRight: (<Icon name='add-shopping-cart' color='white' onPress={() => navigation.navigate("Cart")} />),
+       headerLeft: (<Icon name='menu' color='white' size={40} onPress={() => navigation.toggleDrawer()} />),
+       headerRight: (<Icon name='shopping-cart' size={40} color='white' onPress={() => navigation.navigate("Cart")} />),
        headerStyle: {backgroundColor: '#f4511e'},
        headerTintColor: '#fff',
        headerTitleStyle: {fontWeight: 'bold'}
@@ -30,8 +30,8 @@ const HomeStack = createStackNavigator({
     initialRouteName: 'Order',
     defaultNavigationOptions : ({navigation}) => {
       return {
-        headerLeft: (<Icon name='menu' color='white' onPress={() => navigation.toggleDrawer()} />),
-        headerRight: (<Icon name='add-shopping-cart' color='white' onPress={() => navigation.navigate("Cart")} />),
+        headerLeft: (<Icon name='menu' color='white' size={40} onPress={() => navigation.toggleDrawer()} />),
+        headerRight: (<Icon name='shopping-cart' size={40} color='white' onPress={() => navigation.navigate("Cart")} />),
         headerStyle: {backgroundColor: '#f4511e'},
         headerTintColor: '#fff',
         headerTitleStyle: {fontWeight: 'bold'}
@@ -50,9 +50,9 @@ const TabStack = createBottomTabNavigator({
       if (routeName === 'Nearby') {
         iconName = `near-me`;
       } else if (routeName === 'Orders') {
-        iconName = `book`;
+        iconName = `shopping-basket`;
       }
-      return <Icon name={iconName}  color={tintColor} />;
+      return <Icon name={iconName} size={35} color={tintColor} />;
     },
     }),
     tabBarComponent: TabBarBottom,
@@ -71,7 +71,7 @@ const TabStack = createBottomTabNavigator({
     initialRouteName: 'Cart',
     defaultNavigationOptions : ({navigation}) => {
       return {
-        headerLeft: (<Icon name='menu' color='white' onPress={() => navigation.openDrawer()} />),
+        headerLeft: (<Icon name='menu' size={40} color='white' onPress={() => navigation.openDrawer()} />),
         headerStyle: {backgroundColor: '#f4511e'},
         headerTintColor: '#fff',
         headerTitleStyle: {fontWeight: 'bold'}
@@ -85,7 +85,7 @@ const TabStack = createBottomTabNavigator({
      initialRouteName: 'Settings',
      defaultNavigationOptions : ({navigation}) => {
        return {
-         headerLeft: (<Icon name='menu' color='white' onPress={() => navigation.openDrawer()} />),
+         headerLeft: (<Icon name='menu'size={40} color='white' onPress={() => navigation.openDrawer()} />),
          headerStyle: {backgroundColor: '#f4511e'},
          headerTintColor: '#fff',
          headerTitleStyle: {fontWeight: 'bold'}
