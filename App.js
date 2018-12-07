@@ -5,17 +5,7 @@ import * as authScreen from './src/screens/authStack/index';
 import * as tabScreen from './src/screens/tabStack/index';
 import * as drawScreen from './src/screens/drawStack/index';
 
- const regularHeader = {
-    headerStyle: {
-      backgroundColor: '#f4511e',
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-  }
-
-// Navigators
+// Tab Home Stack
 const HomeStack = createStackNavigator({
    Nearby: tabScreen.nearby,
    StoreItems: tabScreen.storeItems
@@ -23,25 +13,11 @@ const HomeStack = createStackNavigator({
    initialRouteName: 'Nearby',
    defaultNavigationOptions : ({navigation}) => {
      return {
-       headerLeft: (
-         <Icon
-          name='menu'
-          color='white'
-          onPress={() => navigation.toggleDrawer()} />
-      ),
-       headerRight: (
-         <Icon
-          name='add-shopping-cart'
-          color='white'
-          onPress={() => navigation.navigate("Cart")} />
-      ),
-        headerStyle: {
-          backgroundColor: '#f4511e',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        }
+       headerLeft: (<Icon name='menu' color='white' onPress={() => navigation.toggleDrawer()} />),
+       headerRight: (<Icon name='add-shopping-cart' color='white' onPress={() => navigation.navigate("Cart")} />),
+       headerStyle: {backgroundColor: '#f4511e'},
+       headerTintColor: '#fff',
+       headerTitleStyle: {fontWeight: 'bold'}
      }
    }
   });
@@ -54,30 +30,16 @@ const HomeStack = createStackNavigator({
     initialRouteName: 'Order',
     defaultNavigationOptions : ({navigation}) => {
       return {
-        headerLeft: (
-          <Icon
-           name='menu'
-           color='white'
-           onPress={() => navigation.openDrawer()} />
-       ),
-        headerRight: (
-          <Icon
-           name='add-shopping-cart'
-           color='white'
-           onPress={() => navigation.navigate("Cart")} />
-       ),
-         headerStyle: {
-           backgroundColor: '#f4511e',
-         },
-         headerTintColor: '#fff',
-         headerTitleStyle: {
-           fontWeight: 'bold',
-         }
+        headerLeft: (<Icon name='menu' color='white' onPress={() => navigation.toggleDrawer()} />),
+        headerRight: (<Icon name='add-shopping-cart' color='white' onPress={() => navigation.navigate("Cart")} />),
+        headerStyle: {backgroundColor: '#f4511e'},
+        headerTintColor: '#fff',
+        headerTitleStyle: {fontWeight: 'bold'}
       }
     }
   });
 
-// tab stack
+// Home Tab stack
 const TabStack = createBottomTabNavigator({
   Nearby: HomeStack,
   Orders: OrderStack,
@@ -109,19 +71,10 @@ const TabStack = createBottomTabNavigator({
     initialRouteName: 'Cart',
     defaultNavigationOptions : ({navigation}) => {
       return {
-        headerLeft: (
-          <Icon
-           name='menu'
-           color='white'
-           onPress={() => navigation.openDrawer()} />
-       ),
-         headerStyle: {
-           backgroundColor: '#f4511e',
-         },
-         headerTintColor: '#fff',
-         headerTitleStyle: {
-           fontWeight: 'bold',
-         }
+        headerLeft: (<Icon name='menu' color='white' onPress={() => navigation.openDrawer()} />),
+        headerStyle: {backgroundColor: '#f4511e'},
+        headerTintColor: '#fff',
+        headerTitleStyle: {fontWeight: 'bold'}
       }
     }
   });
@@ -132,19 +85,10 @@ const TabStack = createBottomTabNavigator({
      initialRouteName: 'Settings',
      defaultNavigationOptions : ({navigation}) => {
        return {
-         headerLeft: (
-           <Icon
-            name='menu'
-            color='white'
-            onPress={() => navigation.openDrawer()} />
-        ),
-          headerStyle: {
-            backgroundColor: '#f4511e',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          }
+         headerLeft: (<Icon name='menu' color='white' onPress={() => navigation.openDrawer()} />),
+         headerStyle: {backgroundColor: '#f4511e'},
+         headerTintColor: '#fff',
+         headerTitleStyle: {fontWeight: 'bold'}
        }
      }
    });
