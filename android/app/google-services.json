@@ -1,0 +1,164 @@
+{
+  "project_info": {
+    "project_number": "216298519239",
+    "firebase_url": "https://paird-52bfc.firebaseio.com",
+    "project_id": "paird-52bfc",
+    "storage_bucket": "paird-52bfc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216298519239:android:c63ecc9892875672",
+        "android_client_info": {
+          "package_name": "com.paird"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216298519239-ectl59ofrl6uf64bpkcb8317hajb7jo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.paird",
+            "certificate_hash": "c586635669a06ecbe5566945a2f036745942089f"
+          }
+        },
+        {
+          "client_id": "216298519239-ngu2g5n5f48a8v8lniaaebuun7e2cbpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw8oGbUDwq4yS8xPMm1Qm5XBf0mMq4kAI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216298519239-ngu2g5n5f48a8v8lniaaebuun7e2cbpo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "216298519239-h6pnk6h8l01ieus4aifgl0qh9nkhq9s1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.paird.merchant"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216298519239:android:6cc71c941b125a1a",
+        "android_client_info": {
+          "package_name": "com.paird.merchant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216298519239-g9cuuaovds4llcu8qdsjftuq8iplol3o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.paird.merchant",
+            "certificate_hash": "c586635669a06ecbe5566945a2f036745942089f"
+          }
+        },
+        {
+          "client_id": "216298519239-ngu2g5n5f48a8v8lniaaebuun7e2cbpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw8oGbUDwq4yS8xPMm1Qm5XBf0mMq4kAI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216298519239-ngu2g5n5f48a8v8lniaaebuun7e2cbpo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "216298519239-h6pnk6h8l01ieus4aifgl0qh9nkhq9s1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.paird.merchant"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216298519239:android:ee824320fdc419a9",
+        "android_client_info": {
+          "package_name": "com.paird.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216298519239-9up8bovkrflfc71glmh9gtgt77dep814.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.paird.user",
+            "certificate_hash": "c586635669a06ecbe5566945a2f036745942089f"
+          }
+        },
+        {
+          "client_id": "216298519239-ngu2g5n5f48a8v8lniaaebuun7e2cbpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw8oGbUDwq4yS8xPMm1Qm5XBf0mMq4kAI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216298519239-ngu2g5n5f48a8v8lniaaebuun7e2cbpo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "216298519239-h6pnk6h8l01ieus4aifgl0qh9nkhq9s1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.paird.merchant"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
