@@ -8,6 +8,10 @@ export default class checkout extends React.Component {
     this.state = {};
   }
 
+  static navigationOptions = {
+    title: 'Checkout',
+  };
+
   render() {
     return (
       <ScrollView>

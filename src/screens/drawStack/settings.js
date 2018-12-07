@@ -1,15 +1,15 @@
 import React from 'react';
-import { StyleSheet, AsyncStorage, Button, Text, View, ScrollView } from 'react-native';
+import { AsyncStorage, StyleSheet, Button, Text, View, ScrollView } from 'react-native';
 import firebase from 'react-native-firebase';
 
-export default class stores extends React.Component {
+export default class settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   static navigationOptions = {
-    title: 'Home',
+    title: 'Settings',
   };
 
   _signOutAsync = async () => {
@@ -20,7 +20,7 @@ export default class stores extends React.Component {
   render() {
     return (
       <ScrollView>
-        <Text>This is homepage.</Text>
+        <Text>This is a settings.</Text>
         <Button title="Sign out!" onPress={this._signOutAsync} />
       </ScrollView>
     );

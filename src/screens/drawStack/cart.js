@@ -8,6 +8,10 @@ export default class cart extends React.Component {
     this.state = {};
   }
 
+  static navigationOptions = {
+    title: 'Cart',
+  };
+
   render() {
     return (
       <ScrollView>
