@@ -24,10 +24,13 @@ export default class storeItems extends React.Component {
   }
 
   render() {
+    const { navigation } = this.props;
     let info = this.state.info
     if(!Object.keys(info).length == 0){
+      //-----------------------------------------------------------------------------------
       return (
         <ScrollView>
+        
         <View>
             <Text>{info.business_name}</Text>
             <Text>{info.business_address}</Text>
@@ -36,7 +39,7 @@ export default class storeItems extends React.Component {
 
         <View style={styles.touchable}>
         {info['menu'].map((item,i) => (
-          <TouchableHighlight key={i} onPress = { () => alert("hi") } >
+          <TouchableHighlight key={i} onPress = { () => navigation.navigate('ItemDetails', {item : item}) } >
             <Card image={{uri: item['image_url']}} containerStyle={styles.card}>
               <View style={styles.cardFooter}>
               <Text style={styles.text}>{item.item_name}</Text>
@@ -49,14 +52,16 @@ export default class storeItems extends React.Component {
 
         </ScrollView>
       );
+      //-----------------------------------------------------------------------------------
     } else{
+      //-----------------------------------------------------------------------------------
       return (
         <View style={styles.container}>
           <ActivityIndicator />
           <StatusBar barStyle="default" />
         </View>
       );
-
+      //-----------------------------------------------------------------------------------
     }
 
   }

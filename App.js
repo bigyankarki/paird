@@ -2,13 +2,15 @@ import React from 'react';
 import { createSwitchNavigator, createStackNavigator, createAppContainer, createBottomTabNavigator, TabBarBottom, createDrawerNavigator } from 'react-navigation';
 import { Icon} from 'react-native-elements';
 import * as authScreen from './src/screens/authStack/index';
-import * as tabScreen from './src/screens/tabStack/index';
+import * as nearbyScreen from './src/screens/tabStack/nearbyStack/index';
+import * as orderScreen from './src/screens/tabStack/orderStack/index';
 import * as drawScreen from './src/screens/drawStack/index';
 
-// Tab Home Stack
-const HomeStack = createStackNavigator({
-   Nearby: tabScreen.nearby,
-   StoreItems: tabScreen.storeItems
+// Tab -> Nearby Stack
+const NearbyStack = createStackNavigator({
+   Nearby: nearbyScreen.nearby,
+   StoreItems: nearbyScreen.storeItems,
+   ItemDetails: nearbyScreen.itemDetails
  },{
    initialRouteName: 'Nearby',
    defaultNavigationOptions : ({navigation}) => {
@@ -22,10 +24,10 @@ const HomeStack = createStackNavigator({
    }
   });
 
-// Tab Order Stack
+// Tab -> Order Stack
  const OrderStack = createStackNavigator({
-    Order: tabScreen.orders,
-    OrderDetails: tabScreen.orderDetails
+    Order: orderScreen.orders,
+    OrderDetails: orderScreen.orderDetails
   },{
     initialRouteName: 'Order',
     defaultNavigationOptions : ({navigation}) => {
@@ -39,9 +41,9 @@ const HomeStack = createStackNavigator({
     }
   });
 
-// Home Tab stack
+// Drawer -> Home Stack.
 const TabStack = createBottomTabNavigator({
-  Nearby: HomeStack,
+  Nearby: NearbyStack,
   Orders: OrderStack,
 },{defaultNavigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, tintColor }) => {
@@ -65,6 +67,7 @@ const TabStack = createBottomTabNavigator({
     swipeEnabled: true,
  });
 
+ //Drawer -> Cart Stack.
  const CartStack = createStackNavigator({
     Cart: drawScreen.cart
   },{
@@ -79,6 +82,7 @@ const TabStack = createBottomTabNavigator({
     }
   });
 
+  // Drawer -> Settings Stack.
   const SettingsStack = createStackNavigator({
      Settings: drawScreen.settings
    },{

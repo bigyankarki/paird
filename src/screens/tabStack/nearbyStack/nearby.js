@@ -38,7 +38,7 @@ export default class nearby extends React.Component {
         <View style={styles.touchable}>
           {Object.keys(m).map((mInfo, i) => (
             <TouchableHighlight key={i} onPress = { () => navigation.navigate('StoreItems', {storeInfo: m[mInfo]}) } >
-            <Card image={require('../../../assets/korean.jpg')} containerStyle={styles.card}>
+            <Card image={require('../../../../assets/korean.jpg')} containerStyle={styles.card}>
               <Text style={styles.text}> {m[mInfo]['business_name']}</Text>
               <Text>30 mins. 4 miles</Text>
             </Card>
