@@ -38,7 +38,7 @@ export default class nearby extends React.Component {
         <View style={styles.touchable}>
           {Object.keys(m).map((mInfo, i) => (
             <TouchableHighlight key={i} onPress = { () => navigation.navigate('StoreItems', {storeInfo: m[mInfo]}) } >
-            <Card image={require('../../../../assets/korean.jpg')} containerStyle={styles.card}>
+            <Card image={require('../../../../assets/korean.jpg')} containerStyle={styles.card} imageStyle={{height: 90}}>
               <Text style={styles.text}> {m[mInfo]['business_name']}</Text>
               <Text>30 mins. 4 miles</Text>
             </Card>
@@ -78,11 +78,13 @@ const styles = StyleSheet.create({
   },
   heading : {
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginTop: 15,
+    marginLeft: 15
   },
   card:{
     width:175,
-    height:210,
+    height:140,
     borderRadius: 10
 }
 });

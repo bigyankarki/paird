@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ActivityIndicator, StatusBar, Platform, Image, Text, View, ScrollView, TouchableHighlight } from 'react-native';
+import { StyleSheet, ActivityIndicator, StatusBar, Platform, Image, Text, View, ScrollView, TouchableHighlight, ImageBackground } from 'react-native';
 import { Card, ListItem, Icon } from 'react-native-elements'
 import firebase from 'react-native-firebase';
 
@@ -30,17 +30,17 @@ export default class storeItems extends React.Component {
       //-----------------------------------------------------------------------------------
       return (
         <ScrollView>
-        
-        <View>
-            <Text>{info.business_name}</Text>
-            <Text>{info.business_address}</Text>
-            <Text>{info.business_phone}</Text>
-        </View>
+
+        <ImageBackground source={require('../../../../assets/korean.jpg')} style={{flex:0, justifyContent: 'center', alignItems:'stretch', height: 150}}>
+            <Text style={styles.business_name}>{info.business_name}</Text>
+            <Text style={styles.business_description}>{info.business_address}</Text>
+            <Text style={styles.business_description}>{info.business_phone}</Text>
+        </ImageBackground>
 
         <View style={styles.touchable}>
         {info['menu'].map((item,i) => (
           <TouchableHighlight key={i} onPress = { () => navigation.navigate('ItemDetails', {item : item}) } >
-            <Card image={{uri: item['image_url']}} containerStyle={styles.card}>
+            <Card image={{uri: item['image_url']}} containerStyle={styles.card} imageStyle={{height: 90}}>
               <View style={styles.cardFooter}>
               <Text style={styles.text}>{item.item_name}</Text>
               <Text>${item.item_price}</Text>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width:175,
-    height:200,
+    height:140,
     borderRadius: 10
   },
   touchable: {
@@ -89,7 +89,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   text : {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold'
+  },
+  business_name: {
+    color: 'white',
+    fontSize: 23,
+    fontWeight: 'bold',
+    marginLeft: 15
+  },
+  business_description:{
+    color: 'white',
+    fontSize: 15,
+    marginLeft: 15
   }
 });

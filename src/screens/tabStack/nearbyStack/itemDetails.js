@@ -1,12 +1,15 @@
 import React from 'react';
-import { StyleSheet, Platform, ActivityIndicator, StatusBar, Image, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Platform, TextInput, ActivityIndicator, StatusBar, Image, Text, View, ScrollView, ImageBackground } from 'react-native';
+import { Card, Icon, Button } from 'react-native-elements'
 import firebase from 'react-native-firebase';
 
 export default class cart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      item : {}
+      item : {},
+      quantity : 1,
+      notes : ''
     };
   }
 
@@ -19,8 +22,36 @@ export default class cart extends React.Component {
 
   componentDidMount = () => {
     let item = this.props.navigation.getParam('item', 'NO-ITEM-DEFAULT')
-    console.log(item)
     this.setState({item: item})
+  }
+
+  handleAdd = () => {
+    var quantity = this.state.quantity + 1;
+    this.setState({quantity: quantity})
+  }
+
+  handleRemove = () => {
+    if(this.state.quantity > 1){
+      var quantity = this.state.quantity - 1;
+      this.setState({quantity: quantity})
+    }
+  }
+
+  handleInput = (num) => {
+    let quantity = parseInt(num)
+    if(quantity && quantity > 0){
+      this.setState({quantity: quantity})
+    }
+  }
+
+  handleSubmit = () => {
+    const { navigation } = this.props;
+    let orderInfo = {
+      item_info: this.state.info,
+      quantity: this.state.quantity,
+      notes: this.state.notes
+    }
+    navigation.navigate('Cart', {orderInfo : orderInfo})
   }
 
   render() {
@@ -32,12 +63,55 @@ export default class cart extends React.Component {
       return (
         <ScrollView>
 
-        <View>
-            <Text>{item.item_name}</Text>
-            <Text>{item.item_description}</Text>
-            <Text>{item.item_price}</Text>
-        </View>
+        <ImageBackground source={{uri: item.image_url}} style={{flex:0, justifyContent: 'center', alignItems:'stretch', height: 150}}>
+            <Text style={styles.item_name}>{item.item_name}</Text>
+            <Text style={styles.item_description}>{item.item_description}</Text>
+            <Text style={styles.item_description}>${item.item_price}</Text>
+        </ImageBackground>
 
+        <View style={styles.contentContainer}>
+            <View style={{marginTop: 25}}>
+                <Text style={styles.heading}>Special Instructions</Text>
+                <TextInput style={styles.notes}
+                onChangeText={(text) => this.setState({notes: text})}
+                placeholder = "Please be kind!"
+                />
+            </View>
+
+            <View style={styles.quantity}>
+              <Text style={styles.heading}>Quantity</Text>
+              <View style={styles.quantFunc}>
+                  <Icon
+                  size = {15}
+                  raised
+                  name='remove'
+                  color='#f50'
+                  onPress={this.handleRemove} />
+
+                  <TextInput multiline={true} style={styles.textInput}
+                  keyboardType='decimal-pad'
+                  onChangeText={(text) => this.handleInput(text)}
+                  value={(this.state.quantity).toString()}
+                  />
+
+                  <Icon
+                  size = {15}
+                  raised
+                  name='add'
+                  color='#f50'
+                  onPress={this.handleAdd} />
+              </View>
+            </View>
+
+            <Button
+              raised
+              icon={{name: 'send'}}
+              title='Add to Cart'
+              backgroundColor= '#f50'
+              containerViewStyle = {styles.submitButton}
+              onPress={this.handleSubmit} />
+
+        </View>
         </ScrollView>
       )
       //---------------------------------------------------------------------
@@ -45,7 +119,6 @@ export default class cart extends React.Component {
       //---------------------------------------------------------------------
       return (
         <View style={styles.container}>
-          {console.log("before")}
           <ActivityIndicator />
           <StatusBar barStyle="default" />
         </View>
@@ -56,11 +129,56 @@ export default class cart extends React.Component {
   }
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  contentContainer : {
+    marginRight: 15,
+    marginLeft: 15,
+  },
+  item_name: {
+    color: 'white',
+    fontSize: 23,
+    fontWeight: 'bold',
+    marginLeft: 15
+  },
+  item_description:{
+    color: 'white',
+    fontSize: 15,
+    marginLeft: 15
+  },
+  quantFunc : {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  quantity : {
+    marginTop: 25,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  notes: {
+    height: 40,
+    flex: 0,
+    alignItems: 'stretch',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1
+  },
+  heading : {
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  textInput : {
+    height: 40,
+    width: 50,
+    borderColor: 'gray',
+    borderWidth: 1
+  },
+  submitButton : {
+    marginTop: 25
   }
 });
