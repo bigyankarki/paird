@@ -8,9 +8,9 @@ import * as drawScreen from './src/screens/drawStack/index';
 
 // Tab -> Nearby Stack
 const NearbyStack = createStackNavigator({
-   Nearby: nearbyScreen.nearby,
-   StoreItems: nearbyScreen.storeItems,
-   ItemDetails: nearbyScreen.itemDetails
+   Nearby: nearbyScreen.Nearby,
+   StoreItems: nearbyScreen.StoreItems,
+   ItemDetails: nearbyScreen.ItemDetails
  },{
    initialRouteName: 'Nearby',
    defaultNavigationOptions : ({navigation}) => {
@@ -26,8 +26,8 @@ const NearbyStack = createStackNavigator({
 
 // Tab -> Order Stack
  const OrderStack = createStackNavigator({
-    Order: orderScreen.orders,
-    OrderDetails: orderScreen.orderDetails
+    Order: orderScreen.Orders,
+    OrderDetails: orderScreen.OrderDetails
   },{
     initialRouteName: 'Order',
     defaultNavigationOptions : ({navigation}) => {
@@ -69,7 +69,7 @@ const TabStack = createBottomTabNavigator({
 
  //Drawer -> Cart Stack.
  const CartStack = createStackNavigator({
-    Cart: drawScreen.cart
+    Cart: drawScreen.Cart
   },{
     initialRouteName: 'Cart',
     defaultNavigationOptions : ({navigation}) => {
@@ -84,7 +84,7 @@ const TabStack = createBottomTabNavigator({
 
   // Drawer -> Settings Stack.
   const SettingsStack = createStackNavigator({
-     Settings: drawScreen.settings
+     Settings: drawScreen.Settings
    },{
      initialRouteName: 'Settings',
      defaultNavigationOptions : ({navigation}) => {

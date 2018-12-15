@@ -1,3 +1,3 @@
-export {default as nearby} from './nearby';
-export {default as storeItems} from './storeItems';
-export {default as itemDetails} from './itemDetails';
+export {default as Nearby} from './nearby';
+export {default as StoreItems} from './storeItems';
+export {default as ItemDetails} from './itemDetails';

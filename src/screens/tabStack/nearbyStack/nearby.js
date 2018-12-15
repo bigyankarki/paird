@@ -3,7 +3,7 @@ import { StyleSheet, ActivityIndicator, StatusBar, Text, Button, Image, View, Sc
 import { Card, ListItem, Icon } from 'react-native-elements'
 import firebase from 'react-native-firebase';
 
-export default class nearby extends React.Component {
+export default class Nearby extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

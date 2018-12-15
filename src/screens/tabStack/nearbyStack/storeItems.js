@@ -3,7 +3,7 @@ import { StyleSheet, ActivityIndicator, StatusBar, Platform, Image, Text, View, 
 import { Card, ListItem, Icon } from 'react-native-elements'
 import firebase from 'react-native-firebase';
 
-export default class storeItems extends React.Component {
+export default class StoreItems extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +39,7 @@ export default class storeItems extends React.Component {
 
         <View style={styles.touchable}>
         {info['menu'].map((item,i) => (
-          <TouchableHighlight key={i} onPress = { () => navigation.navigate('ItemDetails', {item : item}) } >
+          <TouchableHighlight key={i} onPress = { () => navigation.navigate('ItemDetails', {item : item, storeInfo: info}) } >
             <Card image={{uri: item['image_url']}} containerStyle={styles.card} imageStyle={{height: 90}}>
               <View style={styles.cardFooter}>
               <Text style={styles.text}>{item.item_name}</Text>

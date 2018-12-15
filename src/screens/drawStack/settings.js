@@ -2,7 +2,7 @@ import React from 'react';
 import { AsyncStorage, StyleSheet, Button, Text, View, ScrollView } from 'react-native';
 import firebase from 'react-native-firebase';
 
-export default class settings extends React.Component {
+export default class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};

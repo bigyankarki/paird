@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Platform, TextInput, ActivityIndicator, StatusBar, Image, Text, View, ScrollView, ImageBackground } from 'react-native';
+import { StyleSheet, Platform, TextInput, ActivityIndicator, StatusBar, Image, Text, View, ScrollView, ImageBackground, ToastAndroid } from 'react-native';
 import { Card, Icon, Button } from 'react-native-elements'
 import firebase from 'react-native-firebase';
 
-export default class cart extends React.Component {
+export default class ItemDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,6 +13,7 @@ export default class cart extends React.Component {
     };
   }
 
+  // Set navigation title.
   static navigationOptions = ({ navigation }) => {
     let item = navigation.getParam('item', 'Item')
     return {
@@ -20,16 +21,20 @@ export default class cart extends React.Component {
     };
   };
 
+  // ComponentDidMount
   componentDidMount = () => {
     let item = this.props.navigation.getParam('item', 'NO-ITEM-DEFAULT')
+    console.log(this.props.navigation.getParam('storeInfo', 'NO-ITEM-DEFAULT'));
     this.setState({item: item})
   }
 
+  // handle quantity add button
   handleAdd = () => {
     var quantity = this.state.quantity + 1;
     this.setState({quantity: quantity})
   }
 
+  // handle quantity remove button.
   handleRemove = () => {
     if(this.state.quantity > 1){
       var quantity = this.state.quantity - 1;
@@ -37,6 +42,7 @@ export default class cart extends React.Component {
     }
   }
 
+  // handle input quantity changes.
   handleInput = (num) => {
     let quantity = parseInt(num)
     if(quantity && quantity > 0){
@@ -44,14 +50,17 @@ export default class cart extends React.Component {
     }
   }
 
+  // handle submit button
   handleSubmit = () => {
     const { navigation } = this.props;
     let orderInfo = {
-      item_info: this.state.info,
+      item_info: this.state.item,
       quantity: this.state.quantity,
       notes: this.state.notes
     }
-    navigation.navigate('Cart', {orderInfo : orderInfo})
+    ToastAndroid.show('Added to Cart.', ToastAndroid.SHORT);
+
+    navigation.goBack();
   }
 
   render() {

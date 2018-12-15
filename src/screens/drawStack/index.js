@@ -1,3 +1,3 @@
-export {default as settings} from './settings';
-export {default as cart} from './cart';
-export {default as checkOut} from './checkOut';
+export {default as Settings} from './settings';
+export {default as Cart} from './cart';
+export {default as CheckOut} from './checkOut';
