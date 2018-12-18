@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform, TextInput, ActivityIndicator, StatusBar, Image, Text, View, ScrollView, ImageBackground, ToastAndroid } from 'react-native';
+import { StyleSheet, AsyncStorage, Platform, TextInput, ActivityIndicator, StatusBar, Image, Text, View, ScrollView, ImageBackground, ToastAndroid } from 'react-native';
 import { Card, Icon, Button } from 'react-native-elements'
 import firebase from 'react-native-firebase';
 
@@ -7,6 +7,7 @@ export default class ItemDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      storeInfo: {},
       item : {},
       quantity : 1,
       notes : ''
@@ -24,8 +25,9 @@ export default class ItemDetails extends React.Component {
   // ComponentDidMount
   componentDidMount = () => {
     let item = this.props.navigation.getParam('item', 'NO-ITEM-DEFAULT')
-    console.log(this.props.navigation.getParam('storeInfo', 'NO-ITEM-DEFAULT'));
-    this.setState({item: item})
+    let storeInfo = this.props.navigation.getParam('storeInfo', 'NO-ITEM-DEFAULT')
+    this.setState({item: item, storeInfo : storeInfo})
+
   }
 
   // handle quantity add button
@@ -51,13 +53,29 @@ export default class ItemDetails extends React.Component {
   }
 
   // handle submit button
-  handleSubmit = () => {
+  handleSubmit = async () => {
     const { navigation } = this.props;
     let orderInfo = {
       item_info: this.state.item,
       quantity: this.state.quantity,
-      notes: this.state.notes
+      notes: this.state.notes,
+      business_name: this.state.storeInfo.business_name,
+      business_address: this.state.storeInfo.business_address
     }
+
+    const userToken = await AsyncStorage.getItem('userToken')
+    const ref = await firebase.firestore().collection('user').doc(userToken)
+    // add cart to database.
+      ref.update({
+        cartInfo: firebase.firestore.FieldValue.arrayUnion(orderInfo)
+        })
+        .then(function() {
+          console.log("Document successfully written!");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+
     ToastAndroid.show('Added to Cart.', ToastAndroid.SHORT);
 
     navigation.goBack();
