@@ -79,5 +79,12 @@ export default class Cart extends React.Component {
         </View>
       );
     }
+    else{
+      return(
+        <View>
+          <Text>Your Cart Is Empty!! Keep Shopping...</Text>
+        </View>
+      )
+    }
   }
 }
