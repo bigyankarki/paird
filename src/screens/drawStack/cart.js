@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform, AsyncStorage, Image, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Platform, AsyncStorage, Image, Text, View, ScrollView, TouchableHighlight } from 'react-native';
 import { Card, ListItem, Icon, Divider, Button } from 'react-native-elements'
 import firebase from 'react-native-firebase';
 
@@ -7,6 +7,9 @@ export default class Cart extends React.Component {
   constructor(props) {
     super(props);
     this.reRender = this.props.navigation.addListener('willFocus',()=>{
+      this.fetchDatabase();
+    })
+    this.reRender = this.props.navigation.addListener('didFocus',()=>{
       this.fetchDatabase();
     })
 
@@ -41,24 +44,27 @@ export default class Cart extends React.Component {
     if(this.state.val){
       let subTotal = parseFloat(this.calculate().toFixed(2));
       let tax = parseFloat((subTotal*0.07).toFixed(2));
-      let total = (subTotal+tax);
+      let total = (subTotal+tax).toFixed(2);
+      const {navigation} = this.props;
       return (
-        <View>
+        <View style={{flexDirection: 'column', flex: 1}}>
         <ScrollView>
             {this.state.val.map((val, index) =>(
-              <View style={{flexDirection:'row', flexWrap:'wrap', alignItems:'center', justifyContent:'center'}} key={index} >
-                <Card image={{uri:val.item_info.image_url}} imageStyle={{height:80,width:80, borderRadius:10}} containerStyle={{height:80}} >
-                </Card>
-                <Card containerStyle={{marginLeft:-18, width:180, borderColor:'white',justifyContent:'center', shadowColor:'rgba(0,0,0, 0)', elevation: 0}}>
-                  <Text style={{fontWeight:'bold'}}> {val.business_name} </Text>
-                  <Text> {val.item_info.item_name}</Text>
-                  <Text> Quantity: {val.quantity}</Text>
-                  <Text style={{color:'grey'}}> {val.notes}</Text>
-                </Card>
-                <Card containerStyle={{marginLeft:-20,  borderColor:'white', justifyContent:'center', shadowColor:'rgba(0,0,0, 0)', elevation:0}}>
-                  <Text style={{color:'red'}}>${(val.item_info.item_price*val.quantity).toFixed(2)} </Text>
-                </Card>
-              </View>
+              <TouchableHighlight key={index} onPress = { () => navigation.push('UpdateCart', {val:val, index:index})}>
+                <View style={{flexDirection:'row', flexWrap:'wrap', alignItems:'center', justifyContent:'center'}} key={index} >
+                  <Card image={{uri:val.item_info.image_url}} imageStyle={{height:80,width:80, borderRadius:10}} containerStyle={{height:80}} >
+                  </Card>
+                  <Card containerStyle={{marginLeft:-18, width:180, borderColor:'white',justifyContent:'center', shadowColor:'rgba(0,0,0, 0)', elevation: 0}}>
+                    <Text style={{fontWeight:'bold'}}> {val.business_name} </Text>
+                    <Text> {val.item_info.item_name}</Text>
+                    <Text> Quantity: {val.quantity}</Text>
+                    <Text style={{color:'grey'}}> {val.notes}</Text>
+                  </Card>
+                  <Card containerStyle={{marginLeft:-20,  borderColor:'white', justifyContent:'center', shadowColor:'rgba(0,0,0, 0)', elevation:0}}>
+                    <Text style={{color:'red'}}>${(val.item_info.item_price*val.quantity).toFixed(2)} </Text>
+                  </Card>
+                </View>
+              </TouchableHighlight>
             ))}
             <View style={{marginBottom:43, flexDirection:'row', flexWrap:'wrap', justifyContent:'space-between', marginLeft:15, marginRight:15}}>
               <View>
@@ -73,9 +79,7 @@ export default class Cart extends React.Component {
               </View>
             </View>
         </ScrollView>
-        <View style={{flexDirection: 'column', flex: 1}}>
-          <Button raised backgroundColor='#f4511e' icon={{name: 'payment', color:'white'}} style={{alignSelf: 'center', position: 'absolute', bottom: 0, width: 500}} title='Checkout'/>
-        </View>
+        <Button raised backgroundColor='#f4511e' icon={{name: 'payment', color:'white'}} buttonStyle={{marginLeft:-20,marginRight:-20, flex:0, alignItems:'stretch'}} title='Checkout'/>
         </View>
       );
     }

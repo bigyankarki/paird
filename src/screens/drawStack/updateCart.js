@@ -3,12 +3,12 @@ import { StyleSheet, AsyncStorage, Platform, TextInput, ActivityIndicator, Statu
 import { Card, Icon, Button } from 'react-native-elements';
 import firebase from 'react-native-firebase';
 
-export default class ItemDetails extends React.Component {
+export default class UpdateCart extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      storeInfo: {},
-      item : {},
+      value: {},
+      index: 0,
       quantity : 1,
       notes : ''
     };
@@ -16,17 +16,19 @@ export default class ItemDetails extends React.Component {
 
   // Set navigation title.
   static navigationOptions = ({ navigation }) => {
-    let item = navigation.getParam('item', 'Item')
+    let value = navigation.getParam('val', 'Item')
     return {
-      title: `${item.item_name}`
+      title: `${value.item_info.item_name}`
     };
   };
 
   // ComponentDidMount
   componentDidMount = () => {
-    let item = this.props.navigation.getParam('item', 'NO-ITEM-DEFAULT')
-    let storeInfo = this.props.navigation.getParam('storeInfo', 'NO-ITEM-DEFAULT')
-    this.setState({item: item, storeInfo : storeInfo})
+    let value = this.props.navigation.getParam('val', 'NO-ITEM-DEFAULT')
+    let index = this.props.navigation.getParam('index', 'NO-ITEM-DEFAULT')
+    let quantity = value.quantity;
+    let notes = value.notes;
+    this.setState({value: value, index : index, quantity:quantity, notes:value.notes})
 
   }
 
@@ -56,44 +58,47 @@ export default class ItemDetails extends React.Component {
   handleSubmit = async () => {
     const { navigation } = this.props;
     let orderInfo = {
-      item_info: this.state.item,
+      item_info: this.state.value.item_info,
       quantity: this.state.quantity,
       notes: this.state.notes,
-      business_name: this.state.storeInfo.business_name,
-      business_address: this.state.storeInfo.business_address
+      business_name: this.state.value.business_name,
+      business_address: this.state.value.business_address
     }
 
     const userToken = await AsyncStorage.getItem('userToken')
-    const ref = await firebase.firestore().collection('user').doc(userToken)
-    // add cart to database.
+    const index = this.state.index;
+    const ref = await firebase.firestore().collection('user').doc(userToken);
+    ref.get().then(refDoc =>{
+      let cart = refDoc.data().cartInfo;
+      cart[index].quantity = orderInfo.quantity;
+      cart[index].notes = orderInfo.notes;
       ref.update({
-        cartInfo: firebase.firestore.FieldValue.arrayUnion(orderInfo)
-        })
-        .then(function() {
-          console.log("Document successfully written!");
-        })
-        .catch(function(error) {
-            console.error("Error writing document: ", error);
-        });
+        cartInfo: cart
+      }).then(()=>{
+        console.log("Successfully updated!!!")
+      }).catch((error)=>{
+        console.log("Failed Updating: "+error)
+      })
+    })
+    // update cart to database.
 
-    ToastAndroid.show('Added to Cart.', ToastAndroid.SHORT);
+    ToastAndroid.show('Updated Cart.', ToastAndroid.SHORT);
 
-    navigation.goBack();
+    navigation.navigate('Cart');
   }
 
   render() {
     const { navigation } = this.props;
-    let item = this.state.item
-
-    if (!Object.keys(item).length == 0){
+    let val = this.state.value
+    if (!Object.keys(val).length == 0){
       //---------------------------------------------------------------------
       return (
         <ScrollView>
 
-        <ImageBackground source={{uri: item.image_url}} style={{flex:0, justifyContent: 'center', alignItems:'stretch', height: 150}}>
-            <Text style={styles.item_name}>{item.item_name}</Text>
-            <Text style={styles.item_description}>{item.item_description}</Text>
-            <Text style={styles.item_description}>${item.item_price}</Text>
+        <ImageBackground source={{uri: val.item_info.image_url}} style={{flex:0, justifyContent: 'center', alignItems:'stretch', height: 150}}>
+            <Text style={styles.item_name}>{val.item_info.item_name}</Text>
+            <Text style={styles.item_description}>{val.item_info.item_description}</Text>
+            <Text style={styles.item_description}>${val.item_info.item_price}</Text>
         </ImageBackground>
 
         <View style={styles.contentContainer}>
@@ -101,6 +106,7 @@ export default class ItemDetails extends React.Component {
                 <Text style={styles.heading}>Special Instructions</Text>
                 <TextInput style={styles.notes}
                 onChangeText={(text) => this.setState({notes: text})}
+                value={this.state.notes}
                 placeholder = "Please be kind!"
                 />
             </View>
@@ -133,7 +139,7 @@ export default class ItemDetails extends React.Component {
             <Button
               raised
               icon={{name: 'send'}}
-              title='Add to Cart'
+              title='Update Cart'
               backgroundColor= '#f50'
               containerViewStyle = {styles.submitButton}
               onPress={this.handleSubmit} />

@@ -16,7 +16,7 @@ const NearbyStack = createStackNavigator({
    defaultNavigationOptions : ({navigation}) => {
      return {
        headerLeft: (<Icon name='menu' color='white' size={40} onPress={() => navigation.toggleDrawer()} />),
-       headerRight: (<Icon name='shopping-cart' size={40} color='white' onPress={() => navigation.navigate("Cart")} />),
+       headerRight: (<Icon name='shopping-cart' size={40} color='white' onPress={() => navigation.push("Cart")} />),
        headerStyle: {backgroundColor: '#f4511e'},
        headerTintColor: '#fff',
        headerTitleStyle: {fontWeight: 'bold'}
@@ -33,7 +33,7 @@ const NearbyStack = createStackNavigator({
     defaultNavigationOptions : ({navigation}) => {
       return {
         headerLeft: (<Icon name='menu' color='white' size={40} onPress={() => navigation.toggleDrawer()} />),
-        headerRight: (<Icon name='shopping-cart' size={40} color='white' onPress={() => navigation.navigate("Cart")} />),
+        headerRight: (<Icon name='shopping-cart' size={40} color='white' onPress={() => navigation.push("Cart")} />),
         headerStyle: {backgroundColor: '#f4511e'},
         headerTintColor: '#fff',
         headerTitleStyle: {fontWeight: 'bold'}
@@ -69,7 +69,8 @@ const TabStack = createBottomTabNavigator({
 
  //Drawer -> Cart Stack.
  const CartStack = createStackNavigator({
-    Cart: drawScreen.Cart
+    Cart: drawScreen.Cart,
+    UpdateCart: drawScreen.UpdateCart
   },{
     initialRouteName: 'Cart',
     defaultNavigationOptions : ({navigation}) => {

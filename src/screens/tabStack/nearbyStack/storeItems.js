@@ -25,7 +25,8 @@ export default class StoreItems extends React.Component {
 
   render() {
     const { navigation } = this.props;
-    let info = this.state.info
+    let info = this.state.info;
+    console.log(info);
     if(!Object.keys(info).length == 0){
       //-----------------------------------------------------------------------------------
       return (
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   card: {
-    width:175,
+    width:155,
     height:140,
     borderRadius: 10
   },
