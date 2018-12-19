@@ -41,9 +41,9 @@ export default class Cart extends React.Component {
     if(this.state.val){
       let subTotal = parseFloat(this.calculate().toFixed(2));
       let tax = parseFloat((subTotal*0.07).toFixed(2));
-      let total = (subTotal+tax);
+      let total = (subTotal+tax).toFixed(2);
       return (
-        <View>
+        <View style={{flexDirection: 'column', flex: 1}}>
         <ScrollView>
             {this.state.val.map((val, index) =>(
               <View style={{flexDirection:'row', flexWrap:'wrap', alignItems:'center', justifyContent:'center'}} key={index} >
@@ -73,9 +73,7 @@ export default class Cart extends React.Component {
               </View>
             </View>
         </ScrollView>
-        <View style={{flexDirection: 'column', flex: 1}}>
-          <Button large backgroundColor='#f4511e' icon={{name: 'payment', color:'white'}} style={{alignSelf: 'center', position: 'absolute', bottom: 0, width: 500}} title='Checkout'/>
-        </View>
+          <Button raised backgroundColor='#f4511e' icon={{name: 'payment', color:'white'}} buttonStyle={{marginLeft: -20, marginRight: -20, flex:0, alignItems:'stretch'}} title='Checkout'/>
         </View>
       );
     }
