@@ -1,12 +1,16 @@
 import React from 'react';
-import { StyleSheet, Platform, AsyncStorage, Image, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Platform, AsyncStorage, Image, Text, View, ScrollView, TouchableHighlight } from 'react-native';
 import { Card, ListItem, Icon, Divider, Button } from 'react-native-elements'
+import { PaymentRequest } from 'react-native-payments';
 import firebase from 'react-native-firebase';
 
 export default class Cart extends React.Component {
   constructor(props) {
     super(props);
     this.reRender = this.props.navigation.addListener('willFocus',()=>{
+      this.fetchDatabase();
+    })
+    this.reRender = this.props.navigation.addListener('didFocus',()=>{
       this.fetchDatabase();
     })
 
@@ -37,28 +41,103 @@ export default class Cart extends React.Component {
     return total;
   }
 
+  handleCheckOut = (total) => {
+    // visit documentation @ https://github.com/naoufal/react-native-payments#demo
+    // for stripe config: https://github.com/naoufal/react-native-payments/tree/master/packages/react-native-payments-addon-stripe
+
+
+    // total amount in cents
+    let total_amount = (total * 100).toFixed(0)
+    // define method_data for android payment
+    const METHOD_DATA = [{
+      supportedMethods: ['android-pay'],
+      data: {
+        supportedNetworks: ['visa', 'mastercard', 'amex'],
+        currencyCode: 'USD',
+        environment: 'TEST', // defaults to production
+        paymentMethodTokenizationParameters: {
+          tokenizationType: 'GATEWAY_TOKEN',
+          parameters: {
+            gateway: 'stripe',
+           'stripe:publishableKey': 'pk_test_lfiwakWUPv90N7Ayv465F67O',
+           'stripe:version': '5.0.0' // Only required on Android
+          }
+        }
+      }
+    }];
+
+    const DETAILS = {
+			  id: 'basic-example',
+			  displayItems: [
+			    {
+			      label: 'Movie Ticket',
+			      amount: { currency: 'USD', value: '0.01' }
+			    }
+			  ],
+			  total: {
+			    label: 'Merchant Name',
+			    amount: { currency: 'USD', value: '0.01' }
+			  }
+			};
+
+
+			const paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS)
+
+      paymentRequest.show().then(paymentResponse => {
+      const { getPaymentToken } = paymentResponse.details;
+      return getPaymentToken()
+        .then(paymentToken => {
+
+          fetch('https://pairdserver.herokuapp.com/api/doPayment/', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            amount : total_amount,
+            tokenId : 'tok_visa' // replace with tokenId while in production
+          })
+          })
+          .then(res => res.json())
+          .then(resJson => {
+            console.log("successful transaction")
+            paymentResponse.complete('success');
+          })
+          .catch(error => {
+            console.log("error is"+ error)
+            paymentResponse.complete('success');
+          })
+        })
+      })
+
+  }
+
   render() {
     if(this.state.val){
       let subTotal = parseFloat(this.calculate().toFixed(2));
       let tax = parseFloat((subTotal*0.07).toFixed(2));
       let total = (subTotal+tax).toFixed(2);
+      const {navigation} = this.props;
       return (
         <View style={{flexDirection: 'column', flex: 1}}>
         <ScrollView>
             {this.state.val.map((val, index) =>(
-              <View style={{flexDirection:'row', flexWrap:'wrap', alignItems:'center', justifyContent:'center'}} key={index} >
-                <Card image={{uri:val.item_info.image_url}} imageStyle={{height:80,width:80, borderRadius:10}} containerStyle={{height:80}} >
-                </Card>
-                <Card containerStyle={{marginLeft:-18, width:180, borderColor:'white',justifyContent:'center', shadowColor:'rgba(0,0,0, 0)', elevation: 0}}>
-                  <Text style={{fontWeight:'bold'}}> {val.business_name} </Text>
-                  <Text> {val.item_info.item_name}</Text>
-                  <Text> Quantity: {val.quantity}</Text>
-                  <Text style={{color:'grey'}}> {val.notes}</Text>
-                </Card>
-                <Card containerStyle={{marginLeft:-20,  borderColor:'white', justifyContent:'center', shadowColor:'rgba(0,0,0, 0)', elevation:0}}>
-                  <Text style={{color:'red'}}>${(val.item_info.item_price*val.quantity).toFixed(2)} </Text>
-                </Card>
-              </View>
+              <TouchableHighlight key={index} onPress = { () => navigation.push('UpdateCart', {val:val, index:index})}>
+                <View style={{flexDirection:'row', flexWrap:'wrap', alignItems:'center', justifyContent:'center'}} key={index} >
+                  <Card image={{uri:val.item_info.image_url}} imageStyle={{height:80,width:80, borderRadius:10}} containerStyle={{height:80}} >
+                  </Card>
+                  <Card containerStyle={{marginLeft:-18, width:180, borderColor:'white',justifyContent:'center', shadowColor:'rgba(0,0,0, 0)', elevation: 0}}>
+                    <Text style={{fontWeight:'bold'}}> {val.business_name} </Text>
+                    <Text> {val.item_info.item_name}</Text>
+                    <Text> Quantity: {val.quantity}</Text>
+                    <Text style={{color:'grey'}}> {val.notes}</Text>
+                  </Card>
+                  <Card containerStyle={{marginLeft:-20,  borderColor:'white', justifyContent:'center', shadowColor:'rgba(0,0,0, 0)', elevation:0}}>
+                    <Text style={{color:'red'}}>${(val.item_info.item_price*val.quantity).toFixed(2)} </Text>
+                  </Card>
+                </View>
+              </TouchableHighlight>
             ))}
             <View style={{marginBottom:43, flexDirection:'row', flexWrap:'wrap', justifyContent:'space-between', marginLeft:15, marginRight:15}}>
               <View>
@@ -73,7 +152,7 @@ export default class Cart extends React.Component {
               </View>
             </View>
         </ScrollView>
-          <Button raised backgroundColor='#f4511e' icon={{name: 'payment', color:'white'}} buttonStyle={{marginLeft: -20, marginRight: -20, flex:0, alignItems:'stretch'}} title='Checkout'/>
+        <Button raised backgroundColor='#f4511e' icon={{name: 'payment', color:'white'}} buttonStyle={{marginLeft:-20,marginRight:-20, flex:0, alignItems:'stretch'}} title='Checkout' onPress={() => this.handleCheckOut(total)}/>
         </View>
       );
     }

@@ -154,10 +154,12 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-vector-icons')
+    implementation(project(':react-native-payments'))
+    implementation(project(':react-native-vector-icons'))
     implementation(project(':react-native-google-signin'))
     implementation(project(':react-native-gesture-handler'))
-    implementation "com.android.support:appcompat-v7:23.0.1"
+    implementation 'com.google.android.gms:play-services-wallet:16.0.0'
+    implementation 'com.android.support:appcompat-v7:24.1.1'
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation fileTree(dir: "libs", include: ["*.jar"])

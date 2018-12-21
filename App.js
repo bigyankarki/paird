@@ -6,6 +6,9 @@ import * as nearbyScreen from './src/screens/tabStack/nearbyStack/index';
 import * as orderScreen from './src/screens/tabStack/orderStack/index';
 import * as drawScreen from './src/screens/drawStack/index';
 
+// import for payment
+global.PaymentRequest = require('react-native-payments').PaymentRequest;
+
 // Tab -> Nearby Stack
 const NearbyStack = createStackNavigator({
    Nearby: nearbyScreen.Nearby,
@@ -69,7 +72,8 @@ const TabStack = createBottomTabNavigator({
 
  //Drawer -> Cart Stack.
  const CartStack = createStackNavigator({
-    Cart: drawScreen.Cart
+    Cart: drawScreen.Cart,
+    UpdateCart: drawScreen.UpdateCart
   },{
     initialRouteName: 'Cart',
     defaultNavigationOptions : ({navigation}) => {

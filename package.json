@@ -28,6 +28,9 @@
     "react-native-firebase": "^5.1.1",
     "react-native-gesture-handler": "^1.0.10",
     "react-native-google-signin": "^1.0.1",
+    "react-native-payments": "^0.7.1",
+    "react-native-payments-addon-stripe": "^0.4.0",
+    "react-native-payments-cli": "^0.2.0",
     "react-native-vector-icons": "^6.1.0",
     "react-navigation": "^3.0.6"
   }
