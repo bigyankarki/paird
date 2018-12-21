@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform, AsyncStorage, Image, Text, View, ScrollView, TouchableHighlight } from 'react-native';
+import { StyleSheet, Platform, ToastAndroid, AsyncStorage, Image, Text, View, ScrollView, TouchableHighlight } from 'react-native';
 import { Card, ListItem, Icon, Divider, Button } from 'react-native-elements'
 import { PaymentRequest } from 'react-native-payments';
 import firebase from 'react-native-firebase';
@@ -45,7 +45,6 @@ export default class Cart extends React.Component {
     // visit documentation @ https://github.com/naoufal/react-native-payments#demo
     // for stripe config: https://github.com/naoufal/react-native-payments/tree/master/packages/react-native-payments-addon-stripe
 
-
     // total amount in cents
     let total_amount = (total * 100).toFixed(0)
     // define method_data for android payment
@@ -87,7 +86,6 @@ export default class Cart extends React.Component {
       const { getPaymentToken } = paymentResponse.details;
       return getPaymentToken()
         .then(paymentToken => {
-
           fetch('https://pairdserver.herokuapp.com/api/doPayment/', {
           method: 'POST',
           headers: {
@@ -102,13 +100,18 @@ export default class Cart extends React.Component {
           .then(res => res.json())
           .then(resJson => {
             console.log("successful transaction")
+            ToastAndroid.show('Payment successful', ToastAndroid.SHORT);
             paymentResponse.complete('success');
           })
           .catch(error => {
             console.log("error is"+ error)
-            paymentResponse.complete('success');
+            ToastAndroid.show('Payment Unsuccessful', ToastAndroid.SHORT);
+            paymentResponse.complete('fail');
           })
         })
+      }).catch(error => {
+        console.log("payment cancelled")
+        ToastAndroid.show('Payment Cancelled', ToastAndroid.SHORT);
       })
 
   }
