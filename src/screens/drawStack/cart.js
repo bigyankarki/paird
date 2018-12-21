@@ -93,6 +93,27 @@ static navigationOptions = ({navigation}) => {
     return total;
   }
 
+  // move orders from cart to orders tab in Home.
+  moveToOrders = async () => {
+    const userToken = await AsyncStorage.getItem('userToken')
+    const ref = await firebase.firestore().collection('user').doc(userToken)
+    // add cart to database.
+    let orderInfo = {
+      order: this.state.val,
+      status: 'active'
+    }
+      ref.update({
+        orderInfo: firebase.firestore.FieldValue.arrayUnion(orderInfo)
+        })
+        .then(() =>{
+          console.log("Document successfully written to orderInfo DB!")
+          this.handleRemoveAll() // empty the cart if successfully written.
+        })
+        .catch(error => {
+            console.error("Error writing document to orderInfo DB: ", error);
+        });
+  }
+
   // hanlde Checkout button
   handleCheckOut = (total) => {
     // visit documentation @ https://github.com/naoufal/react-native-payments#demo
@@ -157,21 +178,22 @@ static navigationOptions = ({navigation}) => {
           .then(resJson => {
             console.log("successful transaction")
             this.props.navigation.navigate('Orders') // navigate orders screen
-            this.handleRemoveAll() // remove cartitems and move it to orders in database. Yet to implement.
-            ToastAndroid.show('Payment successful', ToastAndroid.SHORT); 
+            this.moveToOrders() // remove cartitems and move it to orders in database. Yet to implement.
+            ToastAndroid.show('Payment successful', ToastAndroid.SHORT);
             paymentResponse.complete('success');
           })
-          .catch(error => {
+          .catch(error => {   // if payment is Unsuccessful or rejected by stripe or our server.
             console.log("error is"+ error)
             ToastAndroid.show('Payment Unsuccessful', ToastAndroid.SHORT);
             paymentResponse.complete('fail');
           })
         })
-      }).catch(error => {
+      }).catch(error => { // if user cancels or goes backc from google pay screen.
         console.log("payment cancelled")
         ToastAndroid.show('Payment Cancelled', ToastAndroid.SHORT);
       })
   }
+
 
   //Allowing the button on na navigationOptions to interact with handleRemoveAll fucntion
   componentDidMount(){
