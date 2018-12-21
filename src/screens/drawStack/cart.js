@@ -9,6 +9,7 @@ export default class Cart extends React.Component {
     this.reRender = this.props.navigation.addListener('willFocus',()=>{
       this.fetchDatabase();
     })
+    //A react navigation lifecycle method to refresh a page after transition
     this.reRender = this.props.navigation.addListener('didFocus',()=>{
       this.fetchDatabase();
     })
@@ -17,12 +18,62 @@ export default class Cart extends React.Component {
       val:[]
   }
   this.fetchDatabase = this.fetchDatabase.bind(this);
+  this.handleRemoveAll = this.handleRemoveAll.bind(this);
 }
 
-  static navigationOptions = {
-    title: 'Cart',
+  static navigationOptions = ({navigation}) => {
+    return{
+      title: 'Cart',
+      headerRight: (
+        <Icon raised name='delete'  color='red' onPress={navigation.getParam('handleRemove')} />
+      ),
+    }
   };
 
+//Fucntion to remove entire item from the cart
+  handleRemoveAll = async() =>{
+    const uid = await AsyncStorage.getItem('userToken');
+    const ref = firebase.firestore().collection('user').doc(uid);
+    const FieldValue = firebase.firestore.FieldValue;
+    ref.update({
+      cartInfo: FieldValue.delete()
+    }).then(()=>{
+      this.fetchDatabase();
+    }).catch((error)=>{
+      console.log('Error removing the cartInfo');
+    })
+  }
+
+//Fucntion to remove a single item
+  handleRemove = async(index) =>{
+    const uid = await AsyncStorage.getItem('userToken');
+    const ref = firebase.firestore().collection('user').doc(uid);
+    ref.get().then(refDoc =>{
+      let cart = refDoc.data().cartInfo;
+      cart.splice(index,1);
+      if(cart.length!=0){
+        ref.update({
+          cartInfo: cart
+        }).then(()=>{
+          this.fetchDatabase();
+        }).catch((error)=>{
+          console.log("Failed Updating: "+error)
+        })
+      }
+      //Rendering that the cart is empty
+      else{
+        ref.update({
+          cartInfo: firebase.firestore.FieldValue.delete()
+        }).then(()=>{
+          this.fetchDatabase();
+        }).catch((error)=>{
+          console.log('Could not delete the order: '+error)
+        })
+      }
+    })
+  }
+
+//Fetching the database and then updating the state value
   async fetchDatabase(){
     let user = {}
     const uid = await AsyncStorage.getItem('userToken');
@@ -32,12 +83,18 @@ export default class Cart extends React.Component {
      }).catch(error => console.log(`error: ${error}`))
   }
 
+//A simple function to calculate the total price
   calculate = () =>{
     let total = 0;
     this.state.val.map((val, index) => {
       total += (val.item_info.item_price* val.quantity);
     })
     return total;
+  }
+
+//Allowing the button on na navigationOptions to interact with handleRemoveAll fucntion
+  componentDidMount(){
+    this.props.navigation.setParams({handleRemove: this.handleRemoveAll})
   }
 
   render() {
@@ -63,6 +120,7 @@ export default class Cart extends React.Component {
                   <Card containerStyle={{marginLeft:-20,  borderColor:'white', justifyContent:'center', shadowColor:'rgba(0,0,0, 0)', elevation:0}}>
                     <Text style={{color:'red'}}>${(val.item_info.item_price*val.quantity).toFixed(2)} </Text>
                   </Card>
+                  <Icon raised name='delete' onPress={()=>this.handleRemove(index)}/>
                 </View>
               </TouchableHighlight>
             ))}
