@@ -10,6 +10,7 @@ export default class Cart extends React.Component {
     this.reRender = this.props.navigation.addListener('willFocus',()=>{
       this.fetchDatabase();
     })
+    //A react navigation lifecycle method to refresh a page after transition
     this.reRender = this.props.navigation.addListener('didFocus',()=>{
       this.fetchDatabase();
     })
@@ -20,10 +21,60 @@ export default class Cart extends React.Component {
   this.fetchDatabase = this.fetchDatabase.bind(this);
 }
 
-  static navigationOptions = {
+static navigationOptions = ({navigation}) => {
+  return{
     title: 'Cart',
-  };
+    headerRight: (
+      <Icon name='delete' size={40} color='white' onPress={navigation.getParam('handleRemove')} />
+    ),
+  }
+};
 
+//Fucntion to remove entire item from the cart
+  handleRemoveAll = async() =>{
+    const uid = await AsyncStorage.getItem('userToken');
+    const ref = firebase.firestore().collection('user').doc(uid);
+    const FieldValue = firebase.firestore.FieldValue;
+    ref.update({
+      cartInfo: FieldValue.delete()
+    }).then(()=>{
+      this.fetchDatabase();
+    }).catch((error)=>{
+      console.log('Error removing the cartInfo');
+    })
+  }
+
+
+  //Fucntion to remove a single item
+  handleRemove = async(index) =>{
+    const uid = await AsyncStorage.getItem('userToken');
+    const ref = firebase.firestore().collection('user').doc(uid);
+    ref.get().then(refDoc =>{
+      let cart = refDoc.data().cartInfo;
+      cart.splice(index,1);
+      if(cart.length!=0){
+        ref.update({
+          cartInfo: cart
+        }).then(()=>{
+          this.fetchDatabase();
+        }).catch((error)=>{
+          console.log("Failed Updating: "+error)
+        })
+      }
+      //Rendering that the cart is empty
+      else{
+        ref.update({
+          cartInfo: firebase.firestore.FieldValue.delete()
+        }).then(()=>{
+          this.fetchDatabase();
+        }).catch((error)=>{
+          console.log('Could not delete the order: '+error)
+        })
+      }
+    })
+  }
+
+  //Fetching the database and then updating the state value
   async fetchDatabase(){
     let user = {}
     const uid = await AsyncStorage.getItem('userToken');
@@ -33,6 +84,7 @@ export default class Cart extends React.Component {
      }).catch(error => console.log(`error: ${error}`))
   }
 
+  //A simple function to calculate the total price
   calculate = () =>{
     let total = 0;
     this.state.val.map((val, index) => {
@@ -41,12 +93,14 @@ export default class Cart extends React.Component {
     return total;
   }
 
+  // hanlde Checkout button
   handleCheckOut = (total) => {
     // visit documentation @ https://github.com/naoufal/react-native-payments#demo
     // for stripe config: https://github.com/naoufal/react-native-payments/tree/master/packages/react-native-payments-addon-stripe
 
     // total amount in cents
     let total_amount = (total * 100).toFixed(0)
+
     // define method_data for android payment
     const METHOD_DATA = [{
       supportedMethods: ['android-pay'],
@@ -65,6 +119,7 @@ export default class Cart extends React.Component {
       }
     }];
 
+    // define details for android payment
     const DETAILS = {
 			  id: 'basic-example',
 			  displayItems: [
@@ -79,14 +134,15 @@ export default class Cart extends React.Component {
 			  }
 			};
 
-
+      // make a new payment object
 			const paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS)
 
+      // show the google pay
       paymentRequest.show().then(paymentResponse => {
-      const { getPaymentToken } = paymentResponse.details;
+      const { getPaymentToken } = paymentResponse.details; // get payment token from stripe
       return getPaymentToken()
         .then(paymentToken => {
-          fetch('https://pairdserver.herokuapp.com/api/doPayment/', {
+          fetch('https://pairdserver.herokuapp.com/api/doPayment/', { // send it to heroku server for processing.
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -100,7 +156,9 @@ export default class Cart extends React.Component {
           .then(res => res.json())
           .then(resJson => {
             console.log("successful transaction")
-            ToastAndroid.show('Payment successful', ToastAndroid.SHORT);
+            this.props.navigation.navigate('Orders') // navigate orders screen
+            this.handleRemoveAll() // remove cartitems and move it to orders in database. Yet to implement.
+            ToastAndroid.show('Payment successful', ToastAndroid.SHORT); 
             paymentResponse.complete('success');
           })
           .catch(error => {
@@ -113,7 +171,11 @@ export default class Cart extends React.Component {
         console.log("payment cancelled")
         ToastAndroid.show('Payment Cancelled', ToastAndroid.SHORT);
       })
+  }
 
+  //Allowing the button on na navigationOptions to interact with handleRemoveAll fucntion
+  componentDidMount(){
+    this.props.navigation.setParams({handleRemove: this.handleRemoveAll})
   }
 
   render() {
@@ -139,6 +201,7 @@ export default class Cart extends React.Component {
                   <Card containerStyle={{marginLeft:-20,  borderColor:'white', justifyContent:'center', shadowColor:'rgba(0,0,0, 0)', elevation:0}}>
                     <Text style={{color:'red'}}>${(val.item_info.item_price*val.quantity).toFixed(2)} </Text>
                   </Card>
+                  <Icon name='remove' color='#f50' onPress={()=>this.handleRemove(index)}/>
                 </View>
               </TouchableHighlight>
             ))}
